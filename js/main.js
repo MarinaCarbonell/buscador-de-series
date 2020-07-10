@@ -31,14 +31,14 @@ function getImage (showInfo) {
 }
 
 function printShows () {
-  let acc = '';
+  let codeHTML = '';
   for (let showInfo of shows) {
-    acc += `<li class="js-show show">`;
-    acc += `<img class="js-img-show img-show" src = ${getImage (showInfo)} alt='no image found'>`;
-    acc += `<p class="js-img-name img-name">${showInfo.show.name}</p>`;
-    acc += `</li class="js-show show">`;
+    codeHTML += `<li class="js-show show" id=${showInfo.show.id}>`;
+    codeHTML += `<img class="js-img-show img-show" src = ${getImage (showInfo)} alt='no image found'>`;
+    codeHTML += `<p class="js-img-name img-name">${showInfo.show.name}</p>`;
+    codeHTML += `</li class="js-show show">`;
   }
-  showsList.innerHTML = acc;
+  showsList.innerHTML = codeHTML;
 
   const showLiList = document.querySelectorAll ('.js-show');
   for (let showLi of showLiList) {
@@ -49,6 +49,14 @@ function printShows () {
 function handleShow (event) {
   const selectShow = event.currentTarget;
   selectShow.classList.toggle ('favorite-color');
+  addFavorites (event);
+  console.log (favorites);
+}
+
+function addFavorites (event) {
+  const clickedShowId = parseInt (event.currentTarget.id);
+  const show = shows.find (showItem => showItem.show.id === clickedShowId);
+  favorites.push (show);
 }
 
 searchButton.addEventListener ('click', clickButton);
