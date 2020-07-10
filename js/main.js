@@ -10,7 +10,6 @@ const showsList = document.querySelector ('.js-list-movies');
 const favoriteList = document.querySelector ('.list-fav-movie');
 const urlNullShowImage =
   'https://via.placeholder.com/210x295/ffffff/666666/?text=TV';
-const favoriteColor = document.querySelector ('.favorite-color');
 
 function clickButton () {
   fetch (apiUrl + searchInput.value)
@@ -18,8 +17,8 @@ function clickButton () {
       return response.json ();
     })
     .then (function (data) {
-      console.log (data);
-      printShows (data);
+      shows = data;
+      printShows ();
     });
 }
 
@@ -31,15 +30,25 @@ function getImage (showInfo) {
   }
 }
 
-function printShows (shows) {
+function printShows () {
   let acc = '';
   for (let showInfo of shows) {
     acc += `<li class="js-show show">`;
-    acc += `<img class=js-img-show img-show src = ${getImage (showInfo)} alt='no image found'>`;
-    acc += `<p class=js-img-name img-name>${showInfo.show.name}</p>`;
+    acc += `<img class="js-img-show img-show" src = ${getImage (showInfo)} alt='no image found'>`;
+    acc += `<p class="js-img-name img-name">${showInfo.show.name}</p>`;
     acc += `</li class="js-show show">`;
   }
   showsList.innerHTML = acc;
+
+  const showLiList = document.querySelectorAll ('.js-show');
+  for (let showLi of showLiList) {
+    showLi.addEventListener ('click', handleShow);
+  }
+}
+
+function handleShow (event) {
+  const selectShow = event.currentTarget;
+  selectShow.classList.toggle ('favorite-color');
 }
 
 searchButton.addEventListener ('click', clickButton);
