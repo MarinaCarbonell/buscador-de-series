@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Buscador de series</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata&family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://kit-free.fontawesome.com/releases/latest/css/free.min.css" media="all" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/reset.css">
 
@@ -13,17 +14,18 @@
 
 <body class="js-main main wrapper">
     <div class="js-search-movie search-movie">
-        <h1 class="js-main-title main-title">Buscador de series</h1>
+        <h1 class="js-main-title main-title">¡Busca tu serie favorita!<i class="fas fa-tv tv"></i></h1>
         <form class="js-form-movie form-movie">
             <input class="js-input-movie input-movie" type="text" id="movie" name="movie">
         </form>
-        <button class="js-search-btn search-btn">¡Busca tu serie favorita!</button>
+        <button class="js-search-btn search-btn">Buscar<i class="fas fa-search magnify"></i></button>
         <ul class="js-list-movies list-movies"></ul>
     </div>
 
     <div class="js-fav-movie fav-movie">
-        <h2 class="js-fav-tittle fav-title">Mis series favoritas</h2>
+        <h2 class="js-fav-tittle fav-title hidden">Mis series favoritas</h2>
         <ul class=" js-list-fav-movie list-fav-movie"></ul>
+
     </div>
 
     <script src="./js/main.js" type="text/javascript"></script>
