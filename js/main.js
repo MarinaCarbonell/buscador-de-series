@@ -65,6 +65,17 @@ function colorAndFavShow (event) {
   addOrRemoveFavorites (event);
 }
 
+const updateLocalStorage = () => {
+  localStorage.setItem ('favorites', JSON.stringify (favorites));
+};
+
+const getFromLocalStorage = () => {
+  const data = JSON.parse (localStorage.getItem ('favorites'));
+  if (data !== null) {
+    favorites = data;
+  }
+};
+
 function addOrRemoveFavorites (event) {
   const clickedShowId = parseInt (event.currentTarget.id);
   const show = shows.find (showItem => showItem.show.id === clickedShowId);
@@ -105,17 +116,6 @@ function printShowsFavorites () {
   listenButtonRemoveFavorite ();
   listenRemoveAll ();
 }
-
-const updateLocalStorage = () => {
-  localStorage.setItem ('favorites', JSON.stringify (favorites));
-};
-
-const getFromLocalStorage = () => {
-  const data = JSON.parse (localStorage.getItem ('favorites'));
-  if (data !== null) {
-    favorites = data;
-  }
-};
 
 function listenButtonRemoveFavorite () {
   const removeButtons = document.querySelectorAll ('.times-circle');
