@@ -47,6 +47,10 @@ function printShows () {
   }
   showsList.innerHTML = codeHTML;
 
+  listenShowsClicks ();
+}
+
+function listenShowsClicks () {
   const showLiList = document.querySelectorAll ('.js-show');
   for (let showLi of showLiList) {
     showLi.addEventListener ('click', colorAndFavShow);
@@ -56,8 +60,8 @@ function printShows () {
 function colorAndFavShow (event) {
   const selectShow = event.currentTarget;
   selectShow.classList.toggle ('favorite-color');
+
   addOrRemoveFavorites (event);
-  console.log (favorites);
 }
 
 function addOrRemoveFavorites (event) {
@@ -71,15 +75,13 @@ function addOrRemoveFavorites (event) {
   } else {
     favorites.splice (favorites.indexOf (favorite), 1);
   }
-  localStorage.setItem ('favorites', JSON.stringify (favorites));
+  updateLocalStorage ();
   printShowsFavorites ();
 }
 
 function printShowsFavorites () {
-  favorites = JSON.parse (localStorage.getItem ('favorites'));
-  if (favorites === null) {
-    favorites = [];
-  }
+  getFromLocalStorage ();
+
   let codeFavoritesHTML = '';
   for (let favorite of favorites) {
     codeFavoritesHTML += `<li class="js-show show" id=${favorite.show.id}>`;
@@ -89,6 +91,17 @@ function printShowsFavorites () {
   }
   favoriteList.innerHTML = codeFavoritesHTML;
 }
+
+const updateLocalStorage = () => {
+  localStorage.setItem ('favorites', JSON.stringify (favorites));
+};
+
+const getFromLocalStorage = () => {
+  const data = JSON.parse (localStorage.getItem ('favorites'));
+  if (data !== null) {
+    favorites = data;
+  }
+};
 
 printShowsFavorites ();
 searchButton.addEventListener ('click', clickButton);
