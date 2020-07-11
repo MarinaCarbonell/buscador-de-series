@@ -33,7 +33,14 @@ function getImage (showInfo) {
 function printShows () {
   let codeHTML = '';
   for (let showInfo of shows) {
-    codeHTML += `<li class="js-show show" id=${showInfo.show.id}>`;
+    const favorite = favorites.find (
+      favoritesIDItem => favoritesIDItem.show.id === showInfo.show.id
+    );
+    if (favorite === undefined) {
+      codeHTML += `<li class="js-show show" id=${showInfo.show.id}>`;
+    } else {
+      codeHTML += `<li class="js-show show favorite-color" id=${showInfo.show.id}>`;
+    }
     codeHTML += `<img class="js-img-show img-show" src = ${getImage (showInfo)} alt='no image found'>`;
     codeHTML += `<p class="js-img-name img-name">${showInfo.show.name}</p>`;
     codeHTML += `</li class="js-show show">`;
@@ -56,15 +63,13 @@ function colorAndFavShow (event) {
 function addOrRemoveFavorites (event) {
   const clickedShowId = parseInt (event.currentTarget.id);
   const show = shows.find (showItem => showItem.show.id === clickedShowId);
-  const showIndex = favorites.indexOf (show);
-  console.log (show);
-  console.log (favorites);
-  if (showIndex === -1) {
-    console.log ('no encontrado');
+  const favorite = favorites.find (
+    favoritesIDItem => favoritesIDItem.show.id === clickedShowId
+  );
+  if (favorite === undefined) {
     favorites.push (show);
   } else {
-    console.log ('encontrado');
-    favorites.splice (showIndex, 1);
+    favorites.splice (favorites.indexOf (favorite), 1);
   }
   localStorage.setItem ('favorites', JSON.stringify (favorites));
   printShowsFavorites ();
