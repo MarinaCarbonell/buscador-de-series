@@ -42,21 +42,48 @@ function printShows () {
 
   const showLiList = document.querySelectorAll ('.js-show');
   for (let showLi of showLiList) {
-    showLi.addEventListener ('click', handleShow);
+    showLi.addEventListener ('click', colorAndFavShow);
   }
 }
 
-function handleShow (event) {
+function colorAndFavShow (event) {
   const selectShow = event.currentTarget;
   selectShow.classList.toggle ('favorite-color');
-  addFavorites (event);
+  addOrRemoveFavorites (event);
   console.log (favorites);
 }
 
-function addFavorites (event) {
+function addOrRemoveFavorites (event) {
   const clickedShowId = parseInt (event.currentTarget.id);
   const show = shows.find (showItem => showItem.show.id === clickedShowId);
-  favorites.push (show);
+  const showIndex = favorites.indexOf (show);
+  console.log (show);
+  console.log (favorites);
+  if (showIndex === -1) {
+    console.log ('no encontrado');
+    favorites.push (show);
+  } else {
+    console.log ('encontrado');
+    favorites.splice (showIndex, 1);
+  }
+  localStorage.setItem ('favorites', JSON.stringify (favorites));
+  printShowsFavorites ();
 }
 
+function printShowsFavorites () {
+  favorites = JSON.parse (localStorage.getItem ('favorites'));
+  if (favorites === null) {
+    favorites = [];
+  }
+  let codeFavoritesHTML = '';
+  for (let favorite of favorites) {
+    codeFavoritesHTML += `<li class="js-show show" id=${favorite.show.id}>`;
+    codeFavoritesHTML += `<img class="js-img-show img-show" src = ${getImage (favorite)} alt='no image found'>`;
+    codeFavoritesHTML += `<p class="js-img-name img-name">${favorite.show.name}</p>`;
+    codeFavoritesHTML += `</li class="js-show show">`;
+  }
+  favoriteList.innerHTML = codeFavoritesHTML;
+}
+
+printShowsFavorites ();
 searchButton.addEventListener ('click', clickButton);
