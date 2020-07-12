@@ -55,6 +55,15 @@ const listenShowsClicks = () => {
   }
 };
 
+function errorShow () {
+  const errorShowText = document.querySelector ('.js-error-show');
+  if (shows.length === 0) {
+    errorShowText.classList.remove ('hidden');
+  } else {
+    errorShowText.classList.add ('hidden');
+  }
+}
+
 //function for create and inlcude the li's in the lu for shows
 function printShows () {
   let codeHTML = '';
@@ -69,7 +78,9 @@ function printShows () {
     codeHTML += `<p class="js-show-name show-name">${showInfo.show.name}</p>`;
     codeHTML += `</li class="js-show show">`;
   }
+  codeHTML += `<p class="js-error-show error-show hidden">¡No la hemos encontrado!</p>`;
   showsList.innerHTML = codeHTML;
+  errorShow ();
 
   //include here because it starts being when the li are included with the innerHTML
   listenShowsClicks ();
@@ -115,14 +126,16 @@ function printShowsFavorites () {
   let codeFavoritesHTML = '';
   for (let favorite of favorites) {
     codeFavoritesHTML += `<li class="js-favorite-show favorite-show">`;
+    codeFavoritesHTML += `<div class="js-img-div img-div">`;
     codeFavoritesHTML += `<img class="js-img-favorite-show img-favorite-show" src = ${getImage (favorite)} alt='no image found'> `;
     codeFavoritesHTML += `<i class="far fa-times-circle times-circle" id=${favorite.show.id}></i>`;
+    codeFavoritesHTML += `</div>`;
     codeFavoritesHTML += `<p class="js-show-name show-name">${favorite.show.name}</p>`;
-    codeFavoritesHTML += `</li class="js-favorite-show favorite-show">`;
+    codeFavoritesHTML += `</li>`;
   }
   //button remove all
   if (favorites.length > 0) {
-    codeFavoritesHTML += `<button class="js-remove-all-btn remove-all-btn">Borrar todas</button>`;
+    codeFavoritesHTML += `<button class="js-remove-all-btn remove-all-btn">Borrar todas <i class="fas fa-trash trash"></i></button>`;
   }
   favoriteList.innerHTML = codeFavoritesHTML;
 
@@ -171,6 +184,13 @@ function handlerClickRemoveAll () {
   printShowsFavorites ();
   printShows ();
 }
+
+//function for execute clickSearchButtonHandler when click enter
+searchInput.addEventListener ('keyup', function (event) {
+  if (event.keyCode === 13) {
+    clickSearchButtonHandler ();
+  }
+});
 
 //here because we want print favorites in the list when the web is reloaded
 printShowsFavorites ();

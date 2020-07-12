@@ -2,6 +2,8 @@
     padding: 30px;
 }
 
+
+
 .main{
     font-family: 'Righteous', cursive;
     color: maroon;
@@ -105,6 +107,8 @@
 .show-name{
     font-family: 'Righteous', cursive;
     font-weight: 200;
+    margin-top: 10px;
+    text-align: center;
 }
 
 .hidden{
@@ -117,4 +121,50 @@
     height: 50px;
 }
 
+.error-show{
+    font-size: 40px;
+}
 
+.remove-all-btn{
+    height: 50px;
+    width: 150px;
+    margin-top: 20px;
+    padding: 3px 3px;
+    border-radius: 25px;
+    background-color: snow;
+	color: inherit;
+	border: none;
+    font: inherit;
+    border: 2px solid maroon;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+
+.remove-all-btn:hover{
+    color:blue;
+    background-color: maroon;
+}
+
+.list-fav-movie{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+}
+
+.img-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+
+.times-circle{
+    transform: translate(10px);
+    margin-top: 10px;
+}
+
+.trash{
+    padding-top:5px;
+}
