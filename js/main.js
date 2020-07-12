@@ -1,18 +1,20 @@
 'use strict';
 
+//global variables
 let shows = [];
 let favorites = [];
 
 const apiUrl = 'http://api.tvmaze.com/search/shows?q=';
+const urlNullShowImage =
+  'https://via.placeholder.com/210x295/ffffff/666666/?text=TV';
 const searchButton = document.querySelector ('.js-search-btn');
 const searchInput = document.querySelector ('.js-input-movie');
 const showsList = document.querySelector ('.js-list-movies');
 const favoriteList = document.querySelector ('.list-fav-movie');
-const urlNullShowImage =
-  'https://via.placeholder.com/210x295/ffffff/666666/?text=TV';
 const favTitle = document.querySelector ('.js-fav-tittle');
 
-function clickButton () {
+//handle click & fetch
+function clickSearchButtonHandler () {
   fetch (apiUrl + searchInput.value)
     .then (function (response) {
       return response.json ();
@@ -23,20 +25,41 @@ function clickButton () {
     });
 }
 
-function getImage (showInfo) {
+//image show function
+const getImage = showInfo => {
   if (showInfo.show.image === null) {
     return urlNullShowImage;
   } else {
     return showInfo.show.image.medium;
   }
-}
+};
 
+//function for find favorite in favorite list using ID
+const findFavorite = id => {
+  return favorites.find (favorite => favorite.show.id === id);
+};
+
+//handler for include background color and include or eliminate to favorite list when the show is clicked
+const handleClickShow = event => {
+  const selectShow = event.currentTarget;
+  selectShow.classList.toggle ('favorite-color');
+
+  addOrRemoveFavorites (event);
+};
+
+//function listener for include an event click in each li show
+const listenShowsClicks = () => {
+  const showLiList = document.querySelectorAll ('.js-show');
+  for (let showLi of showLiList) {
+    showLi.addEventListener ('click', handleClickShow);
+  }
+};
+
+//function for create and inlcude the li's in the lu for shows
 function printShows () {
   let codeHTML = '';
   for (let showInfo of shows) {
-    const favorite = favorites.find (
-      favoritesIDItem => favoritesIDItem.show.id === showInfo.show.id
-    );
+    const favorite = findFavorite (showInfo.show.id);
     if (favorite === undefined) {
       codeHTML += `<li class="js-show show" id=${showInfo.show.id}>`;
     } else {
@@ -48,27 +71,16 @@ function printShows () {
   }
   showsList.innerHTML = codeHTML;
 
+  //include here because it starts being when the li are included with the innerHTML
   listenShowsClicks ();
 }
 
-function listenShowsClicks () {
-  const showLiList = document.querySelectorAll ('.js-show');
-  for (let showLi of showLiList) {
-    showLi.addEventListener ('click', colorAndFavShow);
-  }
-}
-
-function colorAndFavShow (event) {
-  const selectShow = event.currentTarget;
-  selectShow.classList.toggle ('favorite-color');
-
-  addOrRemoveFavorites (event);
-}
-
+//include the favorite in the ls
 const updateLocalStorage = () => {
   localStorage.setItem ('favorites', JSON.stringify (favorites));
 };
 
+//inclde in the global let favorites the favorites in the ls
 const getFromLocalStorage = () => {
   const data = JSON.parse (localStorage.getItem ('favorites'));
   if (data !== null) {
@@ -76,12 +88,17 @@ const getFromLocalStorage = () => {
   }
 };
 
+//find the show with the ID
+function findShow (clickedShowId) {
+  return shows.find (showItem => showItem.show.id === clickedShowId);
+}
+
+/*find the show and the favorite and include or remove it if is or not in the fav list. Also, it actualice the ls and print favorites again*/
+
 function addOrRemoveFavorites (event) {
   const clickedShowId = parseInt (event.currentTarget.id);
-  const show = shows.find (showItem => showItem.show.id === clickedShowId);
-  const favorite = favorites.find (
-    favoritesIDItem => favoritesIDItem.show.id === clickedShowId
-  );
+  const show = findShow (clickedShowId);
+  const favorite = findFavorite (clickedShowId);
   if (favorite === undefined) {
     favorites.push (show);
   } else {
@@ -91,22 +108,25 @@ function addOrRemoveFavorites (event) {
   printShowsFavorites ();
 }
 
+//function for inlcude the li's in the lu for favorites and print the fav are still in the fav list when the web is open again
 function printShowsFavorites () {
   getFromLocalStorage ();
 
   let codeFavoritesHTML = '';
   for (let favorite of favorites) {
-    codeFavoritesHTML += `<li class="js-favorite-show favorite-show" id=${favorite.show.id}>`;
+    codeFavoritesHTML += `<li class="js-favorite-show favorite-show">`;
     codeFavoritesHTML += `<img class="js-img-favorite-show img-favorite-show" src = ${getImage (favorite)} alt='no image found'> `;
     codeFavoritesHTML += `<i class="far fa-times-circle times-circle" id=${favorite.show.id}></i>`;
     codeFavoritesHTML += `<p class="js-show-name show-name">${favorite.show.name}</p>`;
     codeFavoritesHTML += `</li class="js-favorite-show favorite-show">`;
   }
-
+  //button remove all
   if (favorites.length > 0) {
     codeFavoritesHTML += `<button class="js-remove-all-btn remove-all-btn">Borrar todas</button>`;
   }
   favoriteList.innerHTML = codeFavoritesHTML;
+
+  //title
   if (favorites.length > 0) {
     favTitle.classList.remove ('hidden');
   } else {
@@ -117,18 +137,18 @@ function printShowsFavorites () {
   listenRemoveAll ();
 }
 
+//event click for cross button
 function listenButtonRemoveFavorite () {
   const removeButtons = document.querySelectorAll ('.times-circle');
   for (let removeButton of removeButtons) {
-    removeButton.addEventListener ('click', clickRemoveButton);
+    removeButton.addEventListener ('click', handlerClickRemoveFav);
   }
 }
 
-function clickRemoveButton () {
+//transform the id in a int, find the favorite object in the fav list and include it in a const and delete the favorite form the favorites list
+function handlerClickRemoveFav (event) {
   const clickedShowId = parseInt (event.currentTarget.id);
-  const favorite = favorites.find (
-    favoritesIDItem => favoritesIDItem.show.id === clickedShowId
-  );
+  const favorite = findFavorite (clickedShowId);
   favorites.splice (favorites.indexOf (favorite), 1);
 
   updateLocalStorage ();
@@ -136,19 +156,23 @@ function clickRemoveButton () {
   printShows ();
 }
 
+//function listener remove button
 function listenRemoveAll () {
   if (favorites.length > 0) {
     const removeAllButton = document.querySelector ('.js-remove-all-btn');
-    removeAllButton.addEventListener ('click', clickRemoveAll);
+    removeAllButton.addEventListener ('click', handlerClickRemoveAll);
   }
 }
 
-function clickRemoveAll () {
+//function handler remove all button
+function handlerClickRemoveAll () {
   favorites = [];
   updateLocalStorage ();
   printShowsFavorites ();
   printShows ();
 }
 
+//here because we want print favorites in the list when the web is reloaded
 printShowsFavorites ();
-searchButton.addEventListener ('click', clickButton);
+
+searchButton.addEventListener ('click', clickSearchButtonHandler);
