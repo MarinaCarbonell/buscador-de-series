@@ -22,6 +22,7 @@ function clickSearchButtonHandler () {
     .then (function (data) {
       shows = data;
       printShows ();
+      errorShow ();
     });
 }
 
@@ -78,9 +79,7 @@ function printShows () {
     codeHTML += `<p class="js-show-name show-name">${showInfo.show.name}</p>`;
     codeHTML += `</li class="js-show show">`;
   }
-  codeHTML += `<p class="js-error-show error-show hidden">¡No la hemos encontrado!</p>`;
   showsList.innerHTML = codeHTML;
-  errorShow ();
 
   //include here because it starts being when the li are included with the innerHTML
   listenShowsClicks ();
